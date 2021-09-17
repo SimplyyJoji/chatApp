@@ -9,7 +9,7 @@ const Page = styled.div`
   height: 100vh;
   width: 100%;
   align-items: center;
-  background-color: #46516e;
+  background-color: #4B3869;
   flex-direction: column;
 `;
 
@@ -46,7 +46,7 @@ const TextArea = styled.textarea`
 `;
 
 const Button = styled.button`
-  background-color: pink;
+  background-color: #63B4B8;
   width: 100%;
   border: none;
   height: 50px;
@@ -68,7 +68,7 @@ const MyRow = styled.div`
 
 const MyMessage = styled.div`
   width: 45%;
-  background-color: pink;
+  background-color: #A9E4D7;
   color: #46516e;
   padding: 10px;
   margin-right: 5px;
