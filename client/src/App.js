@@ -1,7 +1,7 @@
 import React, { useState, useEffect,useRef } from 'react';
 import io from 'socket.io-client';
-import './App.css';
-import { Container } from 'react-bootstrap';
+import styled from "styled-components";
+
 
 
 const Page = styled.div`
@@ -13,7 +13,7 @@ const Page = styled.div`
   flex-direction: column;
 `;
 
-const Container = styled.div`
+const Container1 = styled.div`
   display: flex;
   flex-direction: column;
   height: 500px;
@@ -93,7 +93,7 @@ const PartnerMessage = styled.div`
   border-bottom-left-radius: 10%;
 `;
 
-function App() {
+const App = () => {
   const [yourID, setYourID] = useState();
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
@@ -101,7 +101,8 @@ function App() {
   const socketRef = useRef();
 
   useEffect(() => {
-    socketRef.current = io.connect("/");//We go to / because proxy in json.
+    socketRef.current = io.connect('/');//We go to / because proxy in json.
+
     socketRef.current.on("your id", id => {
       setYourID(id);
     })
@@ -109,10 +110,10 @@ function App() {
     socketRef.current.on("message", (message) => {
       recievedMessage(message);
     })
-  });
+  }, []);
   
   function recievedMessage(message) {
-    setMessages(oldMsgs => [...oldMsgs, message])
+    setMessages(oldMsgs => [...oldMsgs, message]);
   }
 
   function sendMessage(e) {
@@ -122,7 +123,7 @@ function App() {
       id: yourID,
     };
     setMessage("");
-    socketRef,current.emit("send message", messageObject);
+    socketRef.current.emit("send message", messageObject);
   }
 
   function handleChange(e) {
@@ -131,19 +132,33 @@ function App() {
 
 
   return (
-    <div className="App">
-      <h1>Chat App</h1>
-    {messages.map((message,index) => {
-      if (message.id === yourId ) {
-        return (
-          <div>
-            </div>
-        )
-      }
-    })}
-  
-    </div>
-  );
+    <Page>
+      <Container1>
+        {messages.map((message, index) => {
+          if (message.id === yourID) {
+            return (
+              <MyRow key={index}>
+                <MyMessage>
+                  {message.body}
+                </MyMessage>
+              </MyRow>
+            )
+          }
+          return (
+            <PartnerRow key={index}>
+              <PartnerMessage>
+                {message.body}
+              </PartnerMessage>
+            </PartnerRow>
+          )
+        })}
+      </Container1>
+      <Form onSubmit={sendMessage}>
+        <TextArea value={message} onChange={handleChange} placeholder="Say something..." />
+        <Button>Send</Button>
+      </Form>
+    </Page>
+  )
 }
 
 export default App;
