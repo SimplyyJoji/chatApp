@@ -1,28 +1,17 @@
 const express = require("express");
-const cors = require("cors");
-
-// Environment vars.
-const port = 5000;
-const db_name = "fakeApp";
-const io = require('socket.io')(server, { cors: true });
-// Immediately execute the import mongoose.config.js function.
-require("../config/mongoose.config")(db_name);
-
+const http = require("http");
 const app = express();
+const server = http.createServer(app);
+const socket = require("socket.io")
+const io = socket(server);
 
-app.use(express.json());
-app.use(cors());
-
-require("../routes/message.routes")(app);
 
 io.on("connection", socket => {
-  console.log(socket.id);
-  //if this logs then a client has been successfully added
+  socket.emit("your id", socket.id);
+  socket.on("send message", body => {
+    io.emit("message", body)
+  })
+})
 
 
-});
-
-app.listen(port, () =>
-  console.log(`Listening on port ${port} for REQuests to RESpond to.`)
-);
-
+server.listen(8000, () => console.log("server is running on port 8000"));
